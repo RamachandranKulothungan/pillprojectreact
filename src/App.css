@@ -1,0 +1,15 @@
+/* .App {
+  text-align: center;
+}
+
+
+/* table{
+      border: "1px solid white"; 
+      width: "100px";
+  } */
+
+.table th ,.table td {
+  border: 1px solid white;
+  text-align: center !important;
+    }
+ 
