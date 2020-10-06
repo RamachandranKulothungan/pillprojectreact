@@ -61,8 +61,8 @@ function Login() {
     <div className="card p-5" style={{ maxWidth: "400px" }}>
       <form onSubmit={handleSubmit}>
         <h2>Welcome to Pill Reminder</h2>
-        <div>
-          {response && JSON.stringify(response)}
+        <div className="row justify-content-center">
+          {response && JSON.stringify(response.errors)}
           {error && JSON.stringify(error)}
         </div>
         <div className="form-group">
