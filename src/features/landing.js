@@ -4,6 +4,7 @@ import CurrentUserContext from "../context/current-user-context";
 import { useFetch } from "../hooks/use-fetch";
 import HistoryTable from "../components/historyTable";
 import MedicalHistoryForm from "../components/medicalHistoryform";
+import DependentIdDropdown from "../components/dependentiddropdown"
 
 function Landing() {
   const Constant = useContext(Constants);
@@ -12,6 +13,7 @@ function Landing() {
   );
   const [histories, setHistories] = useState([]);
   const [addHistory, setAddHistory] = useState(false)
+  const [dependentIds, setDependentIds] = useState([]);
 
   const [userData, setUserData] = useState({
     name: "",
@@ -46,7 +48,13 @@ function Landing() {
   const { isLoading, response, error, doFetch } = useFetch(
     `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}.json`
   );
+
+  const dependentfetch = useFetch(
+    `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}/dependents`
+  );
+
   const addhistoryfetch = useFetch(Constant.HISTORY)
+
   const historyfetch = useFetch(
     `http://localhost:4000/histories/user/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}/current`
   )
@@ -62,21 +70,35 @@ function Landing() {
     doFetch({
       method: "get",
     });
+    dependentfetch.doFetch({
+      method: "get",
+    });
   }, [currentUserState]);
 
-  //setting userdata ,getting dependent data on load
+  //setting username
   useEffect(() => {
     console.log("Profile: ", response);
     if (response) {
-      console.log(response.name)
       setUserData({
         ...userData,
         ["name"]: response.name,
       })
-      console.log(userData)
     }
   }, [response])
 
+  //setting dependentEmails////////////////////////
+  useEffect(() => {
+    if (dependentfetch.response) {
+      console.log("Dependents", dependentfetch.response);
+      let dependent_ids = dependentfetch.response.map((d) => {
+        return d.id;
+      });
+      console.log("ids", dependent_ids);
+      setDependentIds([...dependent_ids]);
+    }
+  }, [dependentfetch.response]);
+
+  //setting histories///////////////////////////
   useEffect(() => {
     console.log(historyfetch.response);
     if (historyfetch.response) {
@@ -156,7 +178,12 @@ function Landing() {
                 {addHistory && (
                   <tr>
                     <td>{currentUserState.currentUser.id}</td>
-                    <td></td>
+                    <td>{dependentIds && (
+                      <select name="dependent_id" onChange={handleChange}>
+                        <option></option>
+                        <DependentIdDropdown dependentIds={dependentIds} />
+                      </select>
+                    )}</td>
                     <MedicalHistoryForm handleChange={handleChange}
                       handleSubmit={handleAddHistory} />
                   </tr>

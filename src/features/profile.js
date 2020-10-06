@@ -186,6 +186,7 @@ export default function Profile() {
     )
     setDependentData(emptydependentData)
   }
+
   const handleDependentChange = (e) => {
     setDependentData({
       ...dependentData,
