@@ -40,7 +40,7 @@ function Login() {
 
     // Set the auth token in localStorage
     localStorage.setItem(Constant.AUTH_TOKEN, response.token);
-
+    localStorage.setItem("user_id", response.id)
     // Update the userContext
     setCurrentUserState((state) => ({
       ...state,

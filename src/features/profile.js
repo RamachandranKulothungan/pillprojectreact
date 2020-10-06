@@ -23,6 +23,8 @@ export default function Profile() {
     blood_group: "",
     weight: "",
     height: "",
+    profile_image: "",
+    profile_image2: "",
   });
 
   const [dependentData, setDependentData] = useState({
@@ -35,7 +37,7 @@ export default function Profile() {
     blood_group: "",
     weight: "",
     height: "",
-    user_id: currentUserState.currentUser.id,
+    user_id: currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id"),
   });
 
   const [emptydependentData, setemptyDependentData] = useState({
@@ -48,7 +50,7 @@ export default function Profile() {
     blood_group: "",
     weight: "",
     height: "",
-    user_id: currentUserState.currentUser.id,
+    user_id: currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id"),
   });
 
   const [dependentEmails, setDependentEmails] = useState([]);
@@ -61,11 +63,11 @@ export default function Profile() {
   }, []);
 
   const { isLoading, response, error, doFetch } = useFetch(
-    `http://localhost:4000/users/${currentUserState.currentUser.id}.json`
+    `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}.json`
   );
 
   const dependentfetch = useFetch(
-    `http://localhost:4000/users/${currentUserState.currentUser.id}/dependents`
+    `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}/dependents`
   );
 
   const addDependentfetch = useFetch(Constant.DEPENDENTS);
@@ -90,6 +92,7 @@ export default function Profile() {
         ["contact"]: response.contact,
         ["country"]: response.country,
         ["dob"]: response.dob,
+        ["profile_image2"]: response.profile_image2,
         ["blood_group"]: response.blood_group,
         ["weight"]: response.weight,
         ["height"]: response.height
@@ -103,6 +106,9 @@ export default function Profile() {
 
   }, [response]);
 
+  useEffect(() => {
+    console.log("userData", userData)
+  }, [userData])
   //setting dependentEmails////////////////////////
   useEffect(() => {
     if (dependentfetch.response) {
@@ -150,7 +156,7 @@ export default function Profile() {
       let dependent = dependentfetch.response.find((d) => {
         return d.email == e.target.value
       })
-      console.log(dependent)
+      //console.log(dependent)
       if (dependent) {
         setDependentData({
           ...dependentData,
@@ -166,7 +172,7 @@ export default function Profile() {
         }
         )
       }
-      console.log(dependentData)
+      //console.log(dependentData)
     }
 
   }
@@ -189,7 +195,7 @@ export default function Profile() {
 
   const handleAddDependent = (e) => {
     e.preventDefault();
-    console.log(dependentData)
+    //console.log(dependentData)
     addDependentfetch.doFetch({
       method: "post",
       body: JSON.stringify({ dependent: dependentData }),
@@ -213,7 +219,7 @@ export default function Profile() {
   return (
     <div className="container">
       {response?.email && (
-        <div className="row">
+        <div className="row" style={{ justifyContent: "center" }}>
           <div className="col-md-6">
             {!editProfile && (<UserProfileView
               response={userData}

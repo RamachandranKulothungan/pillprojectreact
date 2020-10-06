@@ -94,8 +94,8 @@ export default function NewUserPage({
               />
             </tr>
             <tr>
-              <button>Sign in</button>
-              <Link to="/">back</Link>
+              <button type="submit">Sign in</button>
+              <button><Link to="/">back</Link></button>
             </tr>
           </tbody>
         </table>

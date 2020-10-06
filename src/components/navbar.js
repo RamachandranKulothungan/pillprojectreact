@@ -57,6 +57,11 @@ function NavBar({ title }) {
                   Medical History
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/update-password">
+                  Change Password
+                </Link>
+              </li>
             </ul>
             {currentUserState.currentUser && (
               <a onClick={handleSignOut} href="#" className="nav-link">

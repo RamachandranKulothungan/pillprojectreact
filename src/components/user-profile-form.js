@@ -6,10 +6,18 @@ export default function UserProfileForm({ response, onLoad, loaded, handleChange
             <h4>MyProfile</h4>
             <form onSubmit={handleProfileUpdate}>
                 <img
-                    style={{ display: loaded ? "block" : "none", height: "200px" }}
+                    style={{ display: loaded ? "block" : "none", height: "50px", width: "50px" }}
                     src={`${response?.profile_image2}`}
                     onLoad={onLoad}
                 />
+                {response.profile_image2 != "" &&
+                    <input
+                        type="file"
+                        name="profile_image"
+                        onChange={handleChange}
+                    />
+                }
+
                 <div>
                     Name:
               <input

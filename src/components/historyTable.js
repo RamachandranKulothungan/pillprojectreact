@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function HistoryTable({ history }) {
     return (
-        <tr>
+        <>
             <td>{history.illness}</td>
             <td>{history.doctor}</td>
             <td>{history.medicines}</td>
@@ -21,13 +21,13 @@ export default function HistoryTable({ history }) {
                 />} */}
                 <>
                     {history.notification &&
-                        <i class="fas fa-toggle-on"></i>
+                        <i className="fas fa-toggle-on"></i>
                     }
                     {!history.notification &&
-                        <i class="fas fa-toggle-off"></i>
+                        <i className="fas fa-toggle-off"></i>
                     }
                 </>
             </td>
-        </tr>
+        </>
     );
 } 

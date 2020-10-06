@@ -36,6 +36,7 @@ export default function MedicalHistory() {
     dosage_frequency: "",
     notification: false,
   });
+
   const [emptyHistory, setemptyHistory] = useState({
     user_id: currentUserState.currentUser.id,
     dependent_id: "",
@@ -52,11 +53,11 @@ export default function MedicalHistory() {
   const addhistoryfetch = useFetch(Constant.HISTORY)
 
   const dependentfetch = useFetch(
-    `http://localhost:4000/users/${currentUserState.currentUser.id}/dependents`
+    `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}/dependents`
   );
 
   const historyfetch = useFetch(
-    `http://localhost:4000/histories/user/${currentUserState.currentUser.id}`
+    `http://localhost:4000/histories/user/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}`
   )
 
   //getting dependents
@@ -183,13 +184,14 @@ export default function MedicalHistory() {
   }, [addhistoryfetch.response])
 
   return (
-    <div className="container">
+    <div className="container" style={{
+      textAlign: "center"
+    }}>
       <select onChange={dependentChange}>
         <option>Select person</option>
         <option>Self</option>
         <DependentDropdown dependentEmails={dependentEmails} />
       </select>
-      Medical History
       <form onSubmit={handleAddHistory}>
         {personselected && (
           <div className="">
@@ -211,14 +213,19 @@ export default function MedicalHistory() {
                     <>
                       {
                         histories.map((h) => {
-                          return (<HistoryTable history={h} />)
+                          return (
+                            <tr key={h.id}>
+                              <HistoryTable history={h} />
+                            </tr>)
                         })
                       }
                     </>
                   )}
                   {addHistory && (
-                    <MedicalHistoryForm handleChange={handleChange}
-                      handleSubmit={handleAddHistory} />
+                    <tr>
+                      <MedicalHistoryForm handleChange={handleChange}
+                        handleSubmit={handleAddHistory} />
+                    </tr>
                   )}
                 </tbody>
               </table>
@@ -240,6 +247,6 @@ export default function MedicalHistory() {
           </div>
         )}
       </form>
-    </div>
+    </div >
   );
 }

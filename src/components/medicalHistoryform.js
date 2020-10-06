@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function MedicalHistoryForm({ handleChange }) {
     return (
-        <tr>
+        <>
             <td>
                 <div className="col-xs-6">
                     <input
@@ -102,6 +102,6 @@ export default function MedicalHistoryForm({ handleChange }) {
                     />
                 </div>
             </td>
-        </tr>
+        </>
     )
 }

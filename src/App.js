@@ -22,6 +22,7 @@ import AuthenticatedRoutes from "./components/authenticated-routes";
 import Register from "./features/register";
 import $ from "jquery";
 import Popper from "popper.js";
+import ChangePassword from "./features/changepassword";
 function App() {
   return (
     <div className="container-fluid">
@@ -49,6 +50,11 @@ function App() {
                 <Route path="/medical-history">
                   <div className="d-flex mt-5 justify-content-center align-items-center">
                     <MedicalHistory />
+                  </div>
+                </Route>
+                <Route path="/update-password">
+                  <div className="d-flex mt-5 justify-content-center align-items-center">
+                    <ChangePassword />
                   </div>
                 </Route>
               </AuthenticatedRoutes>
