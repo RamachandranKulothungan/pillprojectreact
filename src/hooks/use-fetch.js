@@ -17,15 +17,19 @@ export function useFetch(url) {
     async function fetchData() {
       try {
         let token = localStorage.getItem("MEM_AUTH_TOKEN");
-
+        let headers123 = {
+          "Content-type": "application/json; charset=UTf-8",
+          "Access-Control-Allow-Origin": "*",
+          "Authorization": token ? `Token ${token}` : ""
+        }
+        if (options && options.noContentType) {
+          delete headers123["Content-type"];
+          delete options.noContentType;
+        }
         const response = await fetch(url, {
           ...options,
           mode: "cors",
-          headers: {
-            "Content-type": "application/json; charset=UTf-8",
-            "Access-Control-Allow-Origin": "*",
-            Authorization: token ? `Token ${token}` : "",
-          },
+          headers: headers123,
         });
         const data = await response.json();
         setIsLoading(false);

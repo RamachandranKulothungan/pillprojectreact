@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function HistoryTable({ history }) {
+export default function HistoryTable({ history, onToggleNotification, onDeleteHistory }) {
     return (
         <>
             <td>{history.illness}</td>
@@ -12,21 +12,17 @@ export default function HistoryTable({ history }) {
             <td>{history.dosage_frequency}</td>
             <td>{history.dosage_time}</td>
             <td>
-                {/* {<input
-                    type="checkbox"
-                    name="notification"
-                    className="form-control"
-                    placeholder="Notifications"
-                    checked={history.notification}
-                />} */}
                 <>
                     {history.notification &&
-                        <i className="fas fa-toggle-on"></i>
+                        <i onClick={() => onToggleNotification(history)} className="fas fa-toggle-on"></i>
                     }
                     {!history.notification &&
-                        <i className="fas fa-toggle-off"></i>
+                        <i onClick={() => onToggleNotification(history)} className="fas fa-toggle-off"></i>
                     }
                 </>
+            </td>
+            <td>
+                <i onClick={() => onDeleteHistory(history)} className="fas fa-trash"></i>
             </td>
         </>
     );

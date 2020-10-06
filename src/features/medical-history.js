@@ -24,8 +24,23 @@ export default function MedicalHistory() {
     user_id: currentUserState.currentUser.id,
   });
 
+  const [historyid, setHistoryid] = useState("1")
+
+  const [Hist, setHist] = useState({
+    user_id: currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id"),
+    dependent_id: "",
+    illness: "",
+    doctor: "",
+    medicines: "",
+    start_date: "",
+    end_date: "",
+    dosage_amount: "",
+    dosage_frequency: "",
+    notification: false,
+  });
+
   const [History, setHistory] = useState({
-    user_id: currentUserState.currentUser.id,
+    user_id: currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id"),
     dependent_id: "",
     illness: "",
     doctor: "",
@@ -38,7 +53,7 @@ export default function MedicalHistory() {
   });
 
   const [emptyHistory, setemptyHistory] = useState({
-    user_id: currentUserState.currentUser.id,
+    user_id: currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id"),
     dependent_id: "",
     illness: "",
     doctor: "",
@@ -51,6 +66,10 @@ export default function MedicalHistory() {
   });
 
   const addhistoryfetch = useFetch(Constant.HISTORY)
+
+  const notiffetch = useFetch(`http://localhost:4000/histories/${Hist.id}.json`)
+
+  const deletefetch = useFetch(`http://localhost:4000/histories/${historyid}.json`)
 
   const dependentfetch = useFetch(
     `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}/dependents`
@@ -87,6 +106,7 @@ export default function MedicalHistory() {
 
   //setting histories for self on load
   useEffect(() => {
+    console.log("all histories", historyfetch.response)
   }, [historyfetch.response])
 
   //setting medical history, histories///////////////////////////////
@@ -183,6 +203,48 @@ export default function MedicalHistory() {
     }
   }, [addhistoryfetch.response])
 
+  //Notif Update/////////////////////////////////
+  const onToggleNotification = (h) => {
+    h.notification = !h.notification
+    setHistoryid(h.id)
+    setHist(h)
+  }
+
+  useEffect(() => {
+    if (Hist.id) {
+      notiffetch.doFetch({
+        method: "put",
+        body: JSON.stringify({ history: Hist })
+      })
+    }
+  }, [historyid, Hist])
+
+  useEffect(() => {
+    historyfetch.doFetch({
+      method: "get",
+    });
+  }, [notiffetch.response])
+
+  //Delete Record//////////////////////////
+  const onDeleteHistory = (h) => {
+    if (window.confirm("Delete the item?")) {
+      setHistoryid(h.id)
+      deletefetch.doFetch({
+        method: "delete",
+      })
+      let updated_histories = histories.filter((history) => {
+        return history.id != h.id
+      })
+      setHistories([...updated_histories])
+    }
+  }
+
+  useEffect(() => {
+    historyfetch.doFetch({
+      method: "get",
+    });
+  }, [deletefetch.response])
+
   return (
     <div className="container" style={{
       textAlign: "center"
@@ -208,14 +270,16 @@ export default function MedicalHistory() {
                     <th>Dosage Frequency</th>
                     <th>Dosage Time</th>
                     <th>Notifications</th>
+                    <th>Remove</th>
                   </tr>
-                  {histories.length != 0 && (
+                  {histories.length > 0 && (
                     <>
                       {
                         histories.map((h) => {
                           return (
                             <tr key={h.id}>
-                              <HistoryTable history={h} />
+                              <HistoryTable history={h} onToggleNotification={onToggleNotification}
+                                onDeleteHistory={onDeleteHistory} />
                             </tr>)
                         })
                       }

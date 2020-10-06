@@ -19,7 +19,7 @@ function Register() {
   );
   const registerfetch = useFetch(Constant.REGISTER);
   const loginfetch = useFetch(Constant.API_SESSIONS);
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     contact: "",
@@ -71,10 +71,13 @@ function Register() {
     }));
     // Set the auth token in localStorage
     localStorage.setItem(Constant.AUTH_TOKEN, loginfetch.response.token);
+    localStorage.setItem("user_id", loginfetch.response.id);
   }, [registerfetch.response, loginfetch.response]);
+
   return (
     <div>
-      {currentUserState.isloggedIn && <Redirect to="/" />}
+      {currentUserState.isLoggedIn && <Redirect to="/" />}
+
       {!currentUserState.isLoggedIn && (
         <NewUserPage
           formData={formData}

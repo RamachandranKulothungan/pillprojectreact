@@ -15,9 +15,24 @@ function Landing() {
   const [addHistory, setAddHistory] = useState(false)
   const [dependentIds, setDependentIds] = useState([]);
 
-  const [userData, setUserData] = useState({
-    name: "",
+  const [userData, setUserData] = useState();
+
+  const [historyid, setHistoryid] = useState()
+
+  const [Hist, setHist] = useState({
+    user_id: currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id"),
+    dependent_id: "",
+    id: "",
+    illness: "",
+    doctor: "",
+    medicines: "",
+    start_date: "",
+    end_date: "",
+    dosage_amount: "",
+    dosage_frequency: "",
+    notification: false,
   });
+
 
   const [History, setHistory] = useState({
     user_id: currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id"),
@@ -49,6 +64,10 @@ function Landing() {
     `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}.json`
   );
 
+  const notiffetch = useFetch(`http://localhost:4000/histories/${Hist.id}.json`)
+
+  const deletefetch = useFetch(`http://localhost:4000/histories/${historyid}.json`)
+
   const dependentfetch = useFetch(
     `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}/dependents`
   );
@@ -63,26 +82,26 @@ function Landing() {
     historyfetch.doFetch({
       method: "get",
     });
-  }, []);
-
-  useEffect(() => {
-    if (!currentUserState.currentUser) return;
     doFetch({
       method: "get",
     });
     dependentfetch.doFetch({
       method: "get",
     });
-  }, [currentUserState]);
+  }, []);
+
+  // useEffect(() => {
+  //   if (!currentUserState.currentUser) return;
+
+  // }, []);
 
   //setting username
   useEffect(() => {
     console.log("Profile: ", response);
     if (response) {
-      setUserData({
-        ...userData,
-        ["name"]: response.name,
-      })
+      if (response.name) {
+        setUserData(response)
+      }
     }
   }, [response])
 
@@ -108,6 +127,29 @@ function Landing() {
     }
   }, [historyfetch.response]);
 
+
+
+  //AddingHistory//////////////////////////////////
+  const handleAddHistoryToggle = () => {
+    setAddHistory(p => !p)
+    setHistory(emptyHistory)
+  }
+
+  const handleChange = (e) => {
+    setHistory({
+      ...History,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  const handleAddHistory = (e) => {
+    e.preventDefault();
+    addhistoryfetch.doFetch({
+      method: "post",
+      body: JSON.stringify({ history: History }),
+    });
+  }
+
   useEffect(() => {
     if (addhistoryfetch.response) {
       if (addhistoryfetch.response.id) {
@@ -120,37 +162,57 @@ function Landing() {
     }
   }, [addhistoryfetch.response])
 
-  const handleAddHistoryToggle = () => {
-    setAddHistory(p => !p)
-    setHistory(emptyHistory)
-  }
-  const handleAddHistory = (e) => {
-    e.preventDefault();
-    addhistoryfetch.doFetch({
-      method: "post",
-      body: JSON.stringify({ history: History }),
-    });
+
+  //Notif Update/////////////////////////////////
+  const onToggleNotification = (h) => {
+    h.notification = !h.notification
+    setHistoryid(h.id)
+    setHist(h)
   }
 
-  const handleChange = (e) => {
-    setHistory({
-      ...History,
-      [e.target.name]: e.target.value,
+  useEffect(() => {
+    if (Hist.id) {
+      notiffetch.doFetch({
+        method: "put",
+        body: JSON.stringify({ history: Hist })
+      })
+    }
+  }, [Hist])
+
+  useEffect(() => {
+    historyfetch.doFetch({
+      method: "get",
     });
+  }, [notiffetch.response])
+
+  //Delete Record//////////////////////////
+  const onDeleteHistory = (h) => {
+    if (window.confirm("Delete the item?")) {
+      setHistoryid(h.id)
+      deletefetch.doFetch({
+        method: "delete",
+      })
+    }
   }
+
+  useEffect(() => {
+    historyfetch.doFetch({
+      method: "get",
+    });
+  }, [deletefetch.response])
+
   return (
     <div className="container" style={{
       textAlign: "center"
     }}>
-      <h2>Welcome {userData.name}</h2>
+      <h2>Welcome {userData ? userData.name : "User"}</h2>
       <form onSubmit={handleAddHistory}>
         <div className="">
-          <div className="form-group row">
+          <div className="form-group">
             <table className="table table-striped">
               <tbody>
                 <tr>
-                  <th>user id</th>
-                  <th>dependent id</th>
+                  <th>Person</th>
                   <th>Illness</th>
                   <th>Doctor Name</th>
                   <th>Medicines</th>
@@ -160,6 +222,7 @@ function Landing() {
                   <th>Dosage Frequency</th>
                   <th>Dosage Time</th>
                   <th>Notifications</th>
+                  <th>Remove</th>
                 </tr>
                 {histories.length != 0 && (
                   <>
@@ -167,9 +230,9 @@ function Landing() {
                       histories.map((h) => {
                         return (
                           <tr key={h.id}>
-                            <td>{h.user_id}</td>
                             <td>{h.dependent_id}</td>
-                            <HistoryTable history={h} />
+                            <HistoryTable history={h} onToggleNotification={onToggleNotification}
+                              onDeleteHistory={onDeleteHistory} />
                           </tr>)
                       })
                     }
@@ -177,7 +240,6 @@ function Landing() {
                 )}
                 {addHistory && (
                   <tr>
-                    <td>{currentUserState.currentUser.id}</td>
                     <td>{dependentIds && (
                       <select name="dependent_id" onChange={handleChange}>
                         <option></option>

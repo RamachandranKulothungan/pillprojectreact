@@ -1,8 +1,8 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { useFetch } from "../hooks/use-fetch";
 import CurrentUserContext from "../context/current-user-context";
 import Constants from "../context/constants";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 export default function ChangePassword() {
     const Constant = useContext(Constants);
@@ -36,10 +36,16 @@ export default function ChangePassword() {
             });
         }
         else {
-
+            alert("Passwords do not match")
         }
-
     }
+    useEffect(() => {
+        if (response) {
+            if (response.email) {
+                alert("password updated")
+            }
+        }
+    }, [response])
     return (
         <div style={{
             textAlign: "center"
@@ -47,12 +53,13 @@ export default function ChangePassword() {
             {response && (
                 <>
                     {
-                        response.email &&
-                        <h4>Password Updated</h4>
+                        response.email && (
+                            < Redirect to="/" />
+                        )
                     }
                     {
                         response.errors &&
-                        <h4>{response.errors.password}</h4>
+                        <h4>{response.errors}</h4>
                     }
                 </>
             )}
@@ -60,51 +67,53 @@ export default function ChangePassword() {
             <form onSubmit={handleSubmit}>
                 <div className="container">
                     <table>
-                        <tr>
-                            <td style={{
-                                textAlign: "left"
-                            }}>
-                                <label>Old Password:</label>
-                            </td>
-                            <td>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    onChange={handleChange}
-                                    placeholder="Old Password"
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style={{
-                                textAlign: "left"
-                            }}>
-                                <label>New Password:</label>
-                            </td>
-                            <td>
-                                <input
-                                    type="password"
-                                    name="new_password"
-                                    onChange={handleChange}
-                                    placeholder="New Password"
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style={{
-                                textAlign: "left"
-                            }}>
-                                <label>Re-enter New Password:</label>
-                            </td>
-                            <td>
-                                <input
-                                    type="password"
-                                    name="confirm_new_password"
-                                    onChange={handleChange}
-                                    placeholder="New Password"
-                                />
-                            </td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td style={{
+                                    textAlign: "left"
+                                }}>
+                                    <label>Old Password:</label>
+                                </td>
+                                <td>
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        onChange={handleChange}
+                                        placeholder="Old Password"
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style={{
+                                    textAlign: "left"
+                                }}>
+                                    <label>New Password:</label>
+                                </td>
+                                <td>
+                                    <input
+                                        type="password"
+                                        name="new_password"
+                                        onChange={handleChange}
+                                        placeholder="New Password"
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style={{
+                                    textAlign: "left"
+                                }}>
+                                    <label>Re-enter New Password:</label>
+                                </td>
+                                <td>
+                                    <input
+                                        type="password"
+                                        name="confirm_new_password"
+                                        onChange={handleChange}
+                                        placeholder="New Password"
+                                    />
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 <button type="submit">Submit</button>

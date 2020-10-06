@@ -1,95 +1,141 @@
 import React from "react";
 
-export default function UserProfileForm({ response, onLoad, loaded, handleChange, handleProfileUpdate, onToggleEditProfile }) {
+export default function UserProfileForm({ response, onLoad, loaded, handleChange,
+    handleProfileUpdate, onToggleEditProfile, editImage,
+    onToggleEditImage, handleimagesubmit, onChangeFile }) {
     return (
-        <div className="col-md-6">
-            <h4>MyProfile</h4>
+        <div className="col-md-6 ">
+            <div className="row justify-content-center">
+                <h4>MyProfile</h4>
+            </div>
             <form onSubmit={handleProfileUpdate}>
-                <img
-                    style={{ display: loaded ? "block" : "none", height: "50px", width: "50px" }}
-                    src={`${response?.profile_image2}`}
-                    onLoad={onLoad}
-                />
-                {response.profile_image2 != "" &&
-                    <input
-                        type="file"
-                        name="profile_image"
-                        onChange={handleChange}
+                <div className="row justify-content-center">
+                    <img
+                        style={{ display: loaded ? "block" : "none", height: "75px", width: "75px" }}
+                        src={`${response?.profile_image2}`}
+                        onLoad={onLoad}
                     />
-                }
-
-                <div>
-                    Name:
-              <input
-                        type="text"
-                        name="name"
-                        onChange={handleChange}
-                        placeholder="name"
-                        value={response.name}
-                    />
+                    <div >
+                        {!editImage && <button onClick={onToggleEditImage}>{response.profile_image2 == "" ? "Add Profile image" : "edit image"}</button>}
+                        {editImage && (
+                            <form onSubmit={handleimagesubmit}>
+                                <input
+                                    type="file"
+                                    name="profile_image"
+                                    onChange={onChangeFile}
+                                />
+                                <button type="submit">save</button>
+                                <button onClick={onToggleEditImage}>Cancel</button>
+                            </form>
+                        )}
+                    </div>
                 </div>
-                <div>
-                    Email:
-              <input
-                        type="text"
-                        name="email"
-                        onChange={handleChange}
-                        placeholder="Email"
-                        value={response.email}
-                    />
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Name:
+                    </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    onChange={handleChange}
+                                    placeholder="name"
+                                    value={response.name}
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Email:
+                    </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    name="email"
+                                    onChange={handleChange}
+                                    placeholder="Email"
+                                    value={response.email}
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Contact:
+                    </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    name="contact"
+                                    onChange={handleChange}
+                                    placeholder="contact"
+                                    value={response.contact}
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Country:
+                    </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    name="country"
+                                    onChange={handleChange}
+                                    placeholder="country"
+                                    value={response.country}
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Blood Group:
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    name="blood_group"
+                                    onChange={handleChange}
+                                    placeholder="blood group"
+                                    value={response.blood_group}
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Height(in cms):
+                    </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    name="height"
+                                    onChange={handleChange}
+                                    placeholder="height"
+                                    value={response.height}
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Weight(in kgs):
+                    </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    name="weight"
+                                    onChange={handleChange}
+                                    placeholder="weight"
+                                    value={response.weight}
+                                />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div className="row justify-content-center">
+                    <button type="submit">Submit</button>
+                    <button onClick={onToggleEditProfile}>Cancel</button>
                 </div>
-                <div>
-                    Contact:
-              <input
-                        type="number"
-                        name="contact"
-                        onChange={handleChange}
-                        placeholder="contact"
-                        value={response.contact}
-                    />
-                </div>
-                <div>
-                    Country:
-              <input
-                        type="text"
-                        name="country"
-                        onChange={handleChange}
-                        placeholder="country"
-                        value={response.country}
-                    />
-                </div>
-                <div>
-                    Blood Group:
-              <input
-                        type="text"
-                        name="blood_group"
-                        onChange={handleChange}
-                        placeholder="blood group"
-                        value={response.blood_group}
-                    />
-                </div>
-                <div>
-                    Height(in cms):
-              <input
-                        type="number"
-                        name="height"
-                        onChange={handleChange}
-                        placeholder="height"
-                        value={response.height}
-                    />
-                </div>
-                <div>
-                    Weight(in kgs):
-              <input
-                        type="number"
-                        name="weight"
-                        onChange={handleChange}
-                        placeholder="weight"
-                        value={response.weight}
-                    />
-                </div>
-                <button type="submit">Submit</button>
-                <button onClick={onToggleEditProfile}>Cancel</button>
             </form>
 
         </div>

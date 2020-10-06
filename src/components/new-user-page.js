@@ -24,78 +24,110 @@ export default function NewUserPage({
         <table className="table table-striped">
           <tbody>
             <tr>
-              <label>Name</label>
-              <input
-                type="text"
-                name="name"
-                onChange={handleChange}
-                placeholder="name"
-                value={formData.name}
-              />
+              <td>
+                <label>Name</label>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="name"
+                  onChange={handleChange}
+                  placeholder="name"
+                  value={formData.name}
+                />
+              </td>
             </tr>
             <tr>
-              <label>Email*</label>
-              <input
-                type="text"
-                name="email"
-                onChange={handleChange}
-                placeholder="email"
-                value={formData.email}
-              />
+              <td>
+                <label>Email*</label>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="email"
+                  onChange={handleChange}
+                  placeholder="email"
+                  value={formData.email}
+                />
+              </td>
             </tr>
             <tr>
-              <label>Contact</label>
-              <input
-                type="text"
-                name="contact"
-                onChange={handleChange}
-                placeholder="contact"
-                value={formData.contact}
-              />
+              <td>
+                <label>Contact</label>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="contact"
+                  onChange={handleChange}
+                  placeholder="contact"
+                  value={formData.contact}
+                />
+              </td>
             </tr>
             <tr>
-              <label>Country</label>
-              <input
-                type="text"
-                name="country"
-                onChange={handleChange}
-                placeholder="country"
-                value={formData.country}
-              />
+              <td>
+                <label>Country</label>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="country"
+                  onChange={handleChange}
+                  placeholder="country"
+                  value={formData.country}
+                />
+              </td>
             </tr>
             <tr>
-              <label>Date of Birth</label>
-              <input
-                type="date"
-                name="dob"
-                onChange={handleChange}
-                placeholder="date of birth"
-                value={formData.dob}
-              />
+              <td>
+                <label>Date of Birth</label>
+              </td>
+              <td>
+                <input
+                  type="date"
+                  name="dob"
+                  onChange={handleChange}
+                  placeholder="date of birth"
+                  value={formData.dob}
+                />
+              </td>
             </tr>
             <tr>
-              <label>Password</label>
-              <input
-                type="password"
-                name="password"
-                onChange={handleChange}
-                placeholder="password"
-                value={formData.password}
-              />
+              <td>
+                <label>Password</label>
+              </td>
+              <td>
+                <input
+                  type="password"
+                  name="password"
+                  onChange={handleChange}
+                  placeholder="password"
+                  value={formData.password}
+                />
+              </td>
             </tr>
             <tr>
-              <label>Confirm Password</label>
-              <input
-                type="password"
-                name="password_confirmation"
-                onChange={handleChange}
-                placeholder="confirm password"
-                value={formData.password_confirmation}
-              />
+              <td>
+                <label>Confirm Password</label>
+              </td>
+              <td>
+                <input
+                  type="password"
+                  name="password_confirmation"
+                  onChange={handleChange}
+                  placeholder="confirm password"
+                  value={formData.password_confirmation}
+                />
+              </td>
             </tr>
             <tr>
-              <button type="submit">Sign in</button>
-              <button><Link to="/">back</Link></button>
+              <td>
+                <button type="submit">Sign in</button>
+              </td>
+              <td>
+                <button><Link to="/">back</Link></button>
+              </td>
             </tr>
           </tbody>
         </table>

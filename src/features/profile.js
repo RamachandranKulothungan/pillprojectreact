@@ -23,7 +23,6 @@ export default function Profile() {
     blood_group: "",
     weight: "",
     height: "",
-    profile_image: "",
     profile_image2: "",
   });
 
@@ -53,10 +52,15 @@ export default function Profile() {
     user_id: currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id"),
   });
 
+  const [imagestate, setImagestate] = useState({
+    id: currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id"),
+    profile_image: "",
+  })
   const [dependentEmails, setDependentEmails] = useState([]);
   const [editProfile, setEditProfile] = useState(false)
   const [addDependent, setAddDependent] = useState(false)
   const [loaded, setLoaded] = useState(false);
+  const [editImage, setEditImage] = useState(false)
 
   const onLoad = useCallback(() => {
     setLoaded(true);
@@ -65,7 +69,9 @@ export default function Profile() {
   const { isLoading, response, error, doFetch } = useFetch(
     `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}.json`
   );
-
+  const updatefetch = useFetch(
+    `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}.json`
+  );
   const dependentfetch = useFetch(
     `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}/dependents`
   );
@@ -78,37 +84,37 @@ export default function Profile() {
     doFetch({
       method: "get",
     });
-  }, [currentUserState]);
+  }, []);
 
   //setting userdata ,getting dependent data on load
   useEffect(() => {
-    console.log("Profile: ", response);
     if (response) {
-      console.log(response.name)
-      setUserData({
-        ...userData,
-        ["name"]: response.name,
-        ["email"]: response.email,
-        ["contact"]: response.contact,
-        ["country"]: response.country,
-        ["dob"]: response.dob,
-        ["profile_image2"]: response.profile_image2,
-        ["blood_group"]: response.blood_group,
-        ["weight"]: response.weight,
-        ["height"]: response.height
-      })
-      console.log(userData)
+      if (response.name) {
+        console.log("Profile: ", response);
+        console.log(response.name)
+        setUserData({
+          ...userData,
+          ["name"]: response.name ? response.name : "",
+          ["email"]: response.email ? response.email : "",
+          ["contact"]: response.contact ? response.contact : "",
+          ["country"]: response.country ? response.country : "",
+          ["dob"]: response.dob ? response.dob : "",
+          ["profile_image2"]: response.profile_image2 ? response.profile_image2 : "",
+          ["blood_group"]: response.blood_group ? response.blood_group : "",
+          ["weight"]: response.weight ? response.weight : "",
+          ["height"]: response.height ? response.height : ""
+        })
+        dependentfetch.doFetch({
+          method: "get",
+        });
+      }
     }
-    dependentfetch.doFetch({
-      method: "get",
-    });
-    onToggleEditProfile();
-
   }, [response]);
 
-  useEffect(() => {
-    console.log("userData", userData)
-  }, [userData])
+  // useEffect(() => {
+  //   console.log("userData", userData)
+  // }, [userData])
+
   //setting dependentEmails////////////////////////
   useEffect(() => {
     if (dependentfetch.response) {
@@ -125,6 +131,7 @@ export default function Profile() {
 
   //User Profile //////////////////////////////////
   const onToggleEditProfile = () => {
+    console.log("toggle edit")
     setEditProfile(
       e => !e
     )
@@ -140,11 +147,20 @@ export default function Profile() {
   const handleProfileUpdate = (e) => {
     e.preventDefault();
     console.log(userData)
-    doFetch({
+    updatefetch.doFetch({
       method: "put",
       body: JSON.stringify({ user: userData }),
     });
   }
+
+  useEffect(() => {
+    if (updatefetch.response) {
+      doFetch({
+        method: "get"
+      });
+      onToggleEditProfile();
+    }
+  }, [updatefetch.response])
 
   //DependentProfile///////////////////////////////
   const dependentChange = (e) => {
@@ -158,18 +174,19 @@ export default function Profile() {
       })
       //console.log(dependent)
       if (dependent) {
-        setDependentData({
-          ...dependentData,
-          ["name"]: dependent.name,
-          ["email"]: dependent.email,
-          ["contact"]: dependent.contact,
-          ["relationship"]: dependent.relationship,
-          ["country"]: dependent.country,
-          ["dob"]: dependent.dob,
-          ["blood_group"]: dependent.blood_group,
-          ["weight"]: dependent.weight,
-          ["height"]: dependent.height
-        }
+        setDependentData(dependent
+          //   {
+          //   // ...dependentData,
+          //   // ["name"]: dependent.name,
+          //   // ["email"]: dependent.email,
+          //   // ["contact"]: dependent.contact,
+          //   // ["relationship"]: dependent.relationship,
+          //   // ["country"]: dependent.country,
+          //   // ["dob"]: dependent.dob,
+          //   // ["blood_group"]: dependent.blood_group,
+          //   // ["weight"]: dependent.weight,
+          //   // ["height"]: dependent.height
+          // }
         )
       }
       //console.log(dependentData)
@@ -215,6 +232,36 @@ export default function Profile() {
     }
   }, [addDependentfetch.response]);
 
+  // image form///////////////////////////////////
+  const onToggleEditImage = () => {
+    console.log("image toggle")
+    setEditImage(p => !p)
+  }
+
+  const onChangeFile = e => {
+    console.log(e.target.files[0]);
+    setImagestate({
+      ...imagestate,
+      profile_image: e.target.files[0]
+    });
+  };
+
+  const handleimagesubmit = (e) => {
+    e.preventDefault();
+    if (imagestate.profile_image) {
+      const formData = new FormData();
+      formData.append("user[id]", imagestate.id);
+      formData.append("user[profile_image]", imagestate.profile_image);
+
+      console.log("formData", formData);
+      doFetch({
+        method: "put",
+        noContentType: true,
+        body: formData
+      });
+      onToggleEditImage();
+    }
+  }
 
 
   return (
@@ -227,6 +274,10 @@ export default function Profile() {
               onLoad={onLoad}
               loaded={loaded}
               onToggleEditProfile={onToggleEditProfile}
+              handleimagesubmit={handleimagesubmit}
+              onChangeFile={onChangeFile}
+              onToggleEditImage={onToggleEditImage}
+              editImage={editImage}
             />
             )}
             {editProfile && (<UserProfileForm
@@ -236,8 +287,24 @@ export default function Profile() {
               handleChange={handleChange}
               handleProfileUpdate={handleProfileUpdate}
               onToggleEditProfile={onToggleEditProfile}
+              handleimagesubmit={handleimagesubmit}
+              onChangeFile={onChangeFile}
+              onToggleEditImage={onToggleEditImage}
+              editImage={editImage}
             />
             )}
+            {/* {!editImage && <button onClick={onToggleEditImage}>edit image</button>}
+            {editImage && (
+              <form onSubmit={handleimagesubmit}>
+                <input
+                  type="file"
+                  name="profile_image"
+                  onChange={onChangeFile}
+                />
+                <button type="submit">save</button>
+                <button onClick={onToggleEditImage}>Cancel</button>
+              </form>
+            )} */}
           </div>
           <div className="col-md-6">
             {!addDependent && (

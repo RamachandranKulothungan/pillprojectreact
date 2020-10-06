@@ -39,7 +39,7 @@ export default function MedicalHistoryForm({ handleChange }) {
             <td>
                 <div className="col-xs-6">
                     <input
-                        type="text"
+                        type="date"
                         name="start_date"
                         className="form-control"
                         onChange={handleChange}
@@ -50,7 +50,7 @@ export default function MedicalHistoryForm({ handleChange }) {
             <td>
                 <div className="col-xs-6">
                     <input
-                        type="text"
+                        type="date"
                         name="end_date"
                         className="form-control"
                         onChange={handleChange}

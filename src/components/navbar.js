@@ -63,11 +63,9 @@ function NavBar({ title }) {
                 </Link>
               </li>
             </ul>
-            {currentUserState.currentUser && (
-              <a onClick={handleSignOut} href="#" className="nav-link">
-                Signout {currentUserState.currentUser.email}
-              </a>
-            )}
+            <a onClick={handleSignOut} href="#" className="nav-link">
+              Signout {currentUserState.currentUser.email}
+            </a>
           </div>
         </nav>
       )}
