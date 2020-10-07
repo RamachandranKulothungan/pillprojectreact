@@ -137,6 +137,7 @@ export default function Profile() {
     setEditProfile(
       e => !e
     )
+    setErrors({})
   }
 
   const handleChange = (e) => {
@@ -157,10 +158,31 @@ export default function Profile() {
 
   useEffect(() => {
     if (updatefetch.response) {
-      doFetch({
-        method: "get"
-      });
-      onToggleEditProfile();
+      if (updatefetch.response.id) {
+        doFetch({
+          method: "get"
+        });
+        onToggleEditProfile();
+        setCurrentUserState((state) => ({
+          ...state,
+          currentUser: updatefetch.response,
+        }));
+      }
+      else {
+        setErrors(updatefetch.response)
+        setUserData({
+          ...userData,
+          ["name"]: response.name ? response.name : "",
+          ["email"]: response.email ? response.email : "",
+          ["contact"]: response.contact ? response.contact : "",
+          ["country"]: response.country ? response.country : "",
+          ["dob"]: response.dob ? response.dob : "",
+          ["profile_image2"]: response.profile_image2 ? response.profile_image2 : "",
+          ["blood_group"]: response.blood_group ? response.blood_group : "",
+          ["weight"]: response.weight ? response.weight : "",
+          ["height"]: response.height ? response.height : ""
+        })
+      }
     }
   }, [updatefetch.response])
 
@@ -273,18 +295,22 @@ export default function Profile() {
               editImage={editImage}
             />
             )}
-            {editProfile && (<UserProfileForm
-              response={userData}
-              onLoad={onLoad}
-              loaded={loaded}
-              handleChange={handleChange}
-              handleProfileUpdate={handleProfileUpdate}
-              onToggleEditProfile={onToggleEditProfile}
-              handleimagesubmit={handleimagesubmit}
-              onChangeFile={onChangeFile}
-              onToggleEditImage={onToggleEditImage}
-              editImage={editImage}
-            />
+            {editProfile && (
+              <>
+                <UserProfileForm
+                  response={userData}
+                  onLoad={onLoad}
+                  loaded={loaded}
+                  handleChange={handleChange}
+                  handleProfileUpdate={handleProfileUpdate}
+                  onToggleEditProfile={onToggleEditProfile}
+                  handleimagesubmit={handleimagesubmit}
+                  onChangeFile={onChangeFile}
+                  onToggleEditImage={onToggleEditImage}
+                  editImage={editImage}
+                />
+                {errors && <Errorlist errors={errors} />}
+              </>
             )}
           </div>
           <div className="card col-md-6">

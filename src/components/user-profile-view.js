@@ -5,9 +5,7 @@ export default function UserProfileView({ response, onLoad, loaded, onToggleEdit
   editImage, onToggleEditImage, handleimagesubmit, onChangeFile }) {
   return (
     <div className="col-md-6">
-      <div className="row justify-content-center">
-        <h4>MyProfile</h4>
-      </div>
+      <h4>MyProfile</h4>
       <div className="row">
         <img
           style={{ display: loaded ? "block" : "none", height: "75px", width: "75px" }}
