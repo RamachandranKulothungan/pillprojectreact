@@ -8,6 +8,7 @@ import DependentProfileView from "../components/DependentProfile";
 import UserProfileForm from "../components/user-profile-form";
 import DependentProfileForm from "../components/dependent-profile-form"
 import Errorlist from "../components/errors";
+import EditDependent from "../components/edit_dependent";
 
 export default function Profile() {
   const Constant = useContext(Constants);
@@ -28,6 +29,7 @@ export default function Profile() {
   });
 
   const [dependentData, setDependentData] = useState({
+    id: "",
     name: "",
     email: "",
     contact: "",
@@ -61,8 +63,10 @@ export default function Profile() {
   const [dependentEmails, setDependentEmails] = useState([]);
   const [editProfile, setEditProfile] = useState(false)
   const [addDependent, setAddDependent] = useState(false)
+  const [isEditDependent, setIsEditDependent] = useState(false)
   const [loaded, setLoaded] = useState(false);
   const [editImage, setEditImage] = useState(false)
+  const [isPersonSelected, setIsPersonSelected] = useState(false)
 
   const onLoad = useCallback(() => {
     setLoaded(true);
@@ -79,6 +83,8 @@ export default function Profile() {
   );
 
   const addDependentfetch = useFetch(Constant.DEPENDENTS);
+
+
 
   //getting userData//////////////////////////////
   useEffect(() => {
@@ -190,9 +196,11 @@ export default function Profile() {
   const dependentChange = (e) => {
     console.log(e.target.value)
     if (e.target.value == "Select Dependent") {
+      setIsPersonSelected(false)
       setDependentData(emptydependentData)
     }
     else {
+      setIsPersonSelected(true)
       let dependent = dependentfetch.response.find((d) => {
         return d.email == e.target.value
       })
@@ -205,7 +213,18 @@ export default function Profile() {
 
   }
 
+  //Edit Dependent profile//////////////////////////////
+  const onToggleEditDependent = () => {
+    setIsEditDependent(p => !p)
+  }
 
+  const handleSuccessfulEditDependent = (data) => {
+    setDependentData(data)
+    setIsEditDependent(p => !p)
+    dependentfetch.doFetch({
+      method: "get"
+    })
+  }
 
   //Add Dependent/////////////////////////////////////
   const onToggleAddDependent = () => {
@@ -317,14 +336,25 @@ export default function Profile() {
             {!addDependent && (
               <div>
                 <h4>Dependent Profile</h4>
-                {dependentEmails && (
-                  <select onChange={dependentChange}>
-                    <option>Select Dependent</option>
-                    <DependentDropdown dependentEmails={dependentEmails} />
-                  </select>
+                {!isEditDependent &&
+                  dependentEmails && (
+                    <select onChange={dependentChange}>
+                      <option>Select Dependent</option>
+                      <DependentDropdown dependentEmails={dependentEmails} />
+                    </select>
+                  )}
+                {isEditDependent && (
+                  <EditDependent handleSuccessfulEditDependent={handleSuccessfulEditDependent}
+                    onToggleEditDependent={onToggleEditDependent}
+                    dependentData={dependentData} />
                 )}
-                <DependentProfileView response={dependentData}
-                  onToggleAddDependent={onToggleAddDependent} />
+                {!isEditDependent && (
+                  <DependentProfileView response={dependentData}
+                    onToggleAddDependent={onToggleAddDependent}
+                    onToggleEditDependent={onToggleEditDependent}
+                    isPersonSelected={isPersonSelected}
+                    isEditDependent={isEditDependent} />
+                )}
               </div>
             )}
             {addDependent && (

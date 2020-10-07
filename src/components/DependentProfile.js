@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function DependentProfileView({ response, onToggleAddDependent }) {
+export default function DependentProfileView({ response, onToggleAddDependent, onToggleEditDependent, isPersonSelected }) {
     return (
         <div>
             <table>
@@ -39,14 +39,6 @@ export default function DependentProfileView({ response, onToggleAddDependent })
                     </tr>
                     <tr>
                         <td>
-                            Country:
-                </td>
-                        <td>
-                            {response.country}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
                             Blood group:
                 </td>
                         <td>
@@ -71,6 +63,7 @@ export default function DependentProfileView({ response, onToggleAddDependent })
                     </tr>
                 </tbody>
             </table>
+            {isPersonSelected && <button onClick={onToggleEditDependent}>Edit Data</button>}
             <button onClick={onToggleAddDependent}>Add Dependent</button>
         </div>
     );
