@@ -7,6 +7,7 @@ import Constants from "../context/constants";
 import { useFetch } from "../hooks/use-fetch";
 import HistoryTable from "../components/historyTable";
 import MedicalHistoryForm from "../components/medicalHistoryform";
+import Errorlist from "../components/errors";
 
 export default function MedicalHistory() {
   const Constant = useContext(Constants);
@@ -14,6 +15,7 @@ export default function MedicalHistory() {
     CurrentUserContext
   );
 
+  const [errors, setErrors] = useState([])
   const [dependentEmails, setDependentEmails] = useState([]);
   const [histories, setHistories] = useState([]);
   const [addHistory, setAddHistory] = useState(false)
@@ -167,6 +169,7 @@ export default function MedicalHistory() {
       ...emptyHistory,
       ["dependent_id"]: dependentData.id
     })
+    setErrors({})
   }
 
   useEffect(() => {
@@ -199,6 +202,9 @@ export default function MedicalHistory() {
         setHistories(
           histories
         )
+      }
+      else {
+        setErrors(addhistoryfetch.response)
       }
     }
   }, [addhistoryfetch.response])
@@ -301,6 +307,7 @@ export default function MedicalHistory() {
             )}
             {addHistory && (
               <>
+                {errors && <Errorlist errors={errors} />}
                 <button type="submit">Save</button>
                 <button onClick={handleAddHistoryToggle}>Cancel</button>
               </>

@@ -5,12 +5,14 @@ import { useFetch } from "../hooks/use-fetch";
 import HistoryTable from "../components/historyTable";
 import MedicalHistoryForm from "../components/medicalHistoryform";
 import DependentIdDropdown from "../components/dependentiddropdown"
+import Errorlist from "../components/errors";
 
 function Landing() {
   const Constant = useContext(Constants);
   const [currentUserState, setCurrentUserState] = useContext(
     CurrentUserContext
   );
+  const [errors, setErrors] = useState([])
   const [histories, setHistories] = useState([]);
   const [addHistory, setAddHistory] = useState(false)
   const [dependentIds, setDependentIds] = useState([]);
@@ -133,6 +135,7 @@ function Landing() {
   const handleAddHistoryToggle = () => {
     setAddHistory(p => !p)
     setHistory(emptyHistory)
+    setErrors({})
   }
 
   const handleChange = (e) => {
@@ -158,6 +161,9 @@ function Landing() {
           method: "get",
         });
         //handleAddHistoryToggle();
+      }
+      else {
+        setErrors(addhistoryfetch.response)
       }
     }
   }, [addhistoryfetch.response])
@@ -260,6 +266,7 @@ function Landing() {
           )}
           {addHistory && (
             <>
+              {errors && <Errorlist errors={errors} />}
               <button type="submit">Save</button>
               <button onClick={handleAddHistoryToggle}>Cancel</button>
             </>

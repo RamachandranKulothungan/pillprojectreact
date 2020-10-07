@@ -7,6 +7,7 @@ import DependentDropdown from "../components/dependentDropdown";
 import DependentProfileView from "../components/DependentProfile";
 import UserProfileForm from "../components/user-profile-form";
 import DependentProfileForm from "../components/dependent-profile-form"
+import Errorlist from "../components/errors";
 
 export default function Profile() {
   const Constant = useContext(Constants);
@@ -56,6 +57,7 @@ export default function Profile() {
     id: currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id"),
     profile_image: "",
   })
+  const [errors, setErrors] = useState([])
   const [dependentEmails, setDependentEmails] = useState([]);
   const [editProfile, setEditProfile] = useState(false)
   const [addDependent, setAddDependent] = useState(false)
@@ -174,20 +176,7 @@ export default function Profile() {
       })
       //console.log(dependent)
       if (dependent) {
-        setDependentData(dependent
-          //   {
-          //   // ...dependentData,
-          //   // ["name"]: dependent.name,
-          //   // ["email"]: dependent.email,
-          //   // ["contact"]: dependent.contact,
-          //   // ["relationship"]: dependent.relationship,
-          //   // ["country"]: dependent.country,
-          //   // ["dob"]: dependent.dob,
-          //   // ["blood_group"]: dependent.blood_group,
-          //   // ["weight"]: dependent.weight,
-          //   // ["height"]: dependent.height
-          // }
-        )
+        setDependentData(dependent)
       }
       //console.log(dependentData)
     }
@@ -202,6 +191,7 @@ export default function Profile() {
       p => !p
     )
     setDependentData(emptydependentData)
+    setErrors({})
   }
 
   const handleDependentChange = (e) => {
@@ -228,6 +218,9 @@ export default function Profile() {
           method: "get",
         });
         onToggleAddDependent();
+      }
+      else {
+        setErrors(addDependentfetch.response)
       }
     }
   }, [addDependentfetch.response]);
@@ -268,7 +261,7 @@ export default function Profile() {
     <div className="container">
       {response?.email && (
         <div className="row" style={{ justifyContent: "center" }}>
-          <div className="col-md-6">
+          <div className="card col-md-6">
             {!editProfile && (<UserProfileView
               response={userData}
               onLoad={onLoad}
@@ -293,20 +286,8 @@ export default function Profile() {
               editImage={editImage}
             />
             )}
-            {/* {!editImage && <button onClick={onToggleEditImage}>edit image</button>}
-            {editImage && (
-              <form onSubmit={handleimagesubmit}>
-                <input
-                  type="file"
-                  name="profile_image"
-                  onChange={onChangeFile}
-                />
-                <button type="submit">save</button>
-                <button onClick={onToggleEditImage}>Cancel</button>
-              </form>
-            )} */}
           </div>
-          <div className="col-md-6">
+          <div className="card col-md-6">
             {!addDependent && (
               <div>
                 <h4>Dependent Profile</h4>
@@ -321,9 +302,12 @@ export default function Profile() {
               </div>
             )}
             {addDependent && (
-              <DependentProfileForm handleAddDependent={handleAddDependent}
-                onToggleAddDependent={onToggleAddDependent}
-                handleDependentChange={handleDependentChange} />
+              <>
+                <DependentProfileForm handleAddDependent={handleAddDependent}
+                  onToggleAddDependent={onToggleAddDependent}
+                  handleDependentChange={handleDependentChange} />
+                {errors && <Errorlist errors={errors} />}
+              </>
             )}
           </div>
         </div>

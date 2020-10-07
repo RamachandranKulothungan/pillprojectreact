@@ -11,6 +11,7 @@ import {
   NavLink,
 } from "react-router-dom";
 import NewUserPage from "../components/new-user-page";
+import Errorlist from "../components/errors"
 
 function Register() {
   const Constant = useContext(Constants);
@@ -19,6 +20,7 @@ function Register() {
   );
   const registerfetch = useFetch(Constant.REGISTER);
   const loginfetch = useFetch(Constant.API_SESSIONS);
+  const [errors, setErrors] = useState([])
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -42,19 +44,26 @@ function Register() {
     });
   };
 
+  const resetErrors = () => {
+    setErrors({})
+  }
+
   useEffect(() => {
-    if (!registerfetch.response) return;
-
-    console.log("RESPONSE: ", registerfetch.response);
-    if (!registerfetch.response.id) return;
-
-    loginfetch.doFetch({
-      method: "post",
-      body: JSON.stringify({
-        email: formData.email,
-        password: formData.password,
-      }),
-    });
+    if (registerfetch.response) {
+      console.log("RESPONSE: ", registerfetch.response);
+      if (registerfetch.response.id) {
+        loginfetch.doFetch({
+          method: "post",
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+      }
+      else {
+        setErrors(registerfetch.response)
+      }
+    }
   }, [registerfetch.response]);
 
   useEffect(() => {
@@ -79,12 +88,15 @@ function Register() {
       {currentUserState.isLoggedIn && <Redirect to="/" />}
 
       {!currentUserState.isLoggedIn && (
-        <NewUserPage
-          formData={formData}
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-          registerfetch={registerfetch}
-        />
+        <>
+          <NewUserPage
+            formData={formData}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            resetErrors={resetErrors}
+          />
+          {errors && <Errorlist errors={errors} />}
+        </>
       )}
     </div>
   );

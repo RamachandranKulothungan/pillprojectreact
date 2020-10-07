@@ -12,14 +12,11 @@ export default function NewUserPage({
   registerfetch,
   handleChange,
   handleSubmit,
+  resetErrors
 }) {
   return (
     <div className="flex">
       <h4>register</h4>
-      <div>
-        {registerfetch.response && JSON.stringify(registerfetch.response)}
-        {registerfetch.error && JSON.stringify(registerfetch.error)}
-      </div>
       <form onSubmit={handleSubmit}>
         <table className="table table-striped">
           <tbody>
@@ -126,7 +123,7 @@ export default function NewUserPage({
                 <button type="submit">Sign in</button>
               </td>
               <td>
-                <button><Link to="/">back</Link></button>
+                <button onClick={resetErrors}><Link to="/">back</Link></button>
               </td>
             </tr>
           </tbody>

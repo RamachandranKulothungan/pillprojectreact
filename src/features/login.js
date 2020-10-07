@@ -63,7 +63,6 @@ function Login() {
         <h2>Welcome to Pill Reminder</h2>
         <div className="row justify-content-center">
           {response && JSON.stringify(response.errors)}
-          {error && JSON.stringify(error)}
         </div>
         <div className="form-group">
           <label>Email</label>
