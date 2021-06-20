@@ -23,6 +23,7 @@ import Register from "./features/register";
 import $ from "jquery";
 import Popper from "popper.js";
 import ChangePassword from "./features/changepassword";
+
 function App() {
   return (
     <div className="container-fluid">

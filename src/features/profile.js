@@ -73,13 +73,13 @@ export default function Profile() {
   }, []);
 
   const { isLoading, response, error, doFetch } = useFetch(
-    `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}.json`
+    `${HOST_SERVER}/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}.json`
   );
   const updatefetch = useFetch(
-    `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}.json`
+    `${HOST_SERVER}/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}.json`
   );
   const dependentfetch = useFetch(
-    `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}/dependents`
+    `${HOST_SERVER}/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}/dependents`
   );
 
   const addDependentfetch = useFetch(Constant.DEPENDENTS);

@@ -2,10 +2,11 @@ import React, { createContext } from "react";
 
 const Constant = {
   AUTH_TOKEN: "MEM_AUTH_TOKEN",
-  API_SESSIONS: "http://localhost:4000/sessions",
-  REGISTER: "http://localhost:4000/users.json",
-  DEPENDENTS: "http://localhost:4000/dependents.json",
-  HISTORY: "http://localhost:4000/histories.json",
+  HOST_SERVER: "http://localhost:3000",
+  API_SESSIONS: `${HOST_SERVER}/sessions`,
+  REGISTER: `${HOST_SERVER}/users.json`,
+  DEPENDENTS: `${HOST_SERVER}/dependents.json`,
+  HISTORY: `${HOST_SERVER}/histories.json`,
 };
 
 const GlobalContext = createContext(Constant);

@@ -18,7 +18,7 @@ export default function ChangePassword() {
     })
 
     const { isLoading, response, error, doFetch } = useFetch(
-        "http://localhost:4000/session/update_password"
+        `${HOST_SERVER}/session/update_password`
     );
 
     const handleChange = (e) => {

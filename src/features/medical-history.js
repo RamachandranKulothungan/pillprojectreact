@@ -69,16 +69,16 @@ export default function MedicalHistory() {
 
   const addhistoryfetch = useFetch(Constant.HISTORY)
 
-  const notiffetch = useFetch(`http://localhost:4000/histories/${Hist.id}.json`)
+  const notiffetch = useFetch(`${HOST_SERVER}/histories/${Hist.id}.json`)
 
-  const deletefetch = useFetch(`http://localhost:4000/histories/${historyid}.json`)
+  const deletefetch = useFetch(`${HOST_SERVER}/histories/${historyid}.json`)
 
   const dependentfetch = useFetch(
-    `http://localhost:4000/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}/dependents`
+    `${HOST_SERVER}/users/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}/dependents`
   );
 
   const historyfetch = useFetch(
-    `http://localhost:4000/histories/user/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}`
+    `${HOST_SERVER}/histories/user/${currentUserState.currentUser.id ? currentUserState.currentUser.id : localStorage.getItem("user_id")}`
   )
 
   //getting dependents
