@@ -7,7 +7,7 @@ function CurrentUserChecker({ children }) {
   const Constant = useContext(Constants);
   const token = localStorage.getItem(Constant.AUTH_TOKEN);
   const [, setCurrentUserState] = useContext(CurrentUserContext);
-  const { response, doFetch } = useFetch("http://localhost:3000/sessions/user");
+  const { response, doFetch } = useFetch(`${HOST_SERVER}/sessions/user`);
 
   useEffect(() => {
     if (!token) {

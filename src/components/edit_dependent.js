@@ -16,7 +16,7 @@ export default function EditDependent({ dependentData, handleSuccessfulEditDepen
         user_id: dependentData.user_id ? dependentData.user_id : "",
     });
 
-    const editDependentFetch = useFetch(`http://localhost:3000/dependents/${editDependentData.id}.json`)
+    const editDependentFetch = useFetch(`${HOST_SERVER}/dependents/${editDependentData.id}.json`)
 
     const handleDependentChange = (e) => {
         setEditDependentData({

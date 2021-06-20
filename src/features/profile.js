@@ -84,8 +84,6 @@ export default function Profile() {
 
   const addDependentfetch = useFetch(Constant.DEPENDENTS);
 
-
-
   //getting userData//////////////////////////////
   useEffect(() => {
     if (!currentUserState.currentUser) return;
@@ -118,10 +116,6 @@ export default function Profile() {
       }
     }
   }, [response]);
-
-  // useEffect(() => {
-  //   console.log("userData", userData)
-  // }, [userData])
 
   //setting dependentEmails////////////////////////
   useEffect(() => {
